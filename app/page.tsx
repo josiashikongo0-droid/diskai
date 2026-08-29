@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { Activity, ArrowRight, BarChart3, Bell, Bot, CalendarDays, Check, ChevronDown, CircleHelp, DollarSign, FileText, Filter, LayoutDashboard, MapPin, Menu, MoreHorizontal, Package, Plus, Search, Send, Settings, Sparkles, Target, TrendingUp, Users, Wallet, X, Zap, Hexagon, SlidersHorizontal, Route, Building2, Mail, Clock3 } from 'lucide-react'
+import { Activity, ArrowRight, BarChart3, Bell, Bot, CalendarDays, Check, ChevronDown, CircleHelp, DollarSign, FileText, Filter, LayoutDashboard, MapPin, Menu, MoreHorizontal, Package, Plus, Search, Send, Settings, Sparkles, Target, TrendingUp, Users, Wallet, X, Zap, Hexagon, SlidersHorizontal, Route, Building2, Mail, Clock3, MessageSquare } from 'lucide-react'
 
 const navItems = [['Overview', LayoutDashboard], ['Tour Planner', Route], ['Venues', Target], ['Bookings', FileText], ['Calendar', CalendarDays], ['Finances', Wallet], ['Marketing', Send], ['AI Agents', Bot], ['Analytics', BarChart3]] as const
 const venues = [
