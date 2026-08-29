@@ -30,7 +30,6 @@ export default function SignupPage() {
             <button className="auth-submit" type="submit">Create free workspace <ArrowRight size={16} /></button>
             <small className="terms">By creating an account, you agree to our <a href="#terms">Terms</a> and <a href="#privacy">Privacy Policy</a>.</small>
           </form>}
-          {!submitted && <p className="auth-switch">Already have an account? <Link href="/">Sign in</Link></p>}
         </section>
       </div>
     </main>
