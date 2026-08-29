@@ -3,8 +3,8 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'DISKAI — Tour Operating System',
+  description: 'The AI-powered operating system for touring artists and live entertainment businesses.',
   generator: 'v0.app',
   icons: {
     icon: [
