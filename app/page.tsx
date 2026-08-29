@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import {
   Activity, ArrowUpRight, BarChart3, Bell, Bot, CalendarDays, Check, ChevronDown, CircleHelp, DollarSign,
   FileText, Filter, LayoutDashboard, MapPin, Menu, MessageSquare, MoreHorizontal, Package, PanelLeftClose,
-  Plus, Search, Send, Settings, Sparkles, Target, TrendingUp, Users, Wallet, X, Zap,
+  Plus, Search, Send, Settings, Sparkles, Target, TrendingUp, Users, Wallet, X, Zap, Hexagon,
 } from 'lucide-react'
 
 const navItems = [
@@ -50,7 +50,7 @@ export default function Page() {
 
   return <div className="app-shell">
     <aside className={`sidebar ${sidebar ? '' : 'collapsed'}`}>
-      <div className="brand"><div className="brand-mark">D</div><div><b>DISKAI</b><small>Tour Operating System</small></div></div>
+      <div className="brand"><div className="brand-mark" aria-label="DISKAI logo"><Hexagon size={17} strokeWidth={2.6} /><i /></div><div><b>DISKAI</b><small>Tour Operating System</small></div></div>
       <button className="new-tour" onClick={() => setGenerated(true)}><Plus size={16} /> New Tour</button>
       <nav>{navItems.map(([label, Icon]) => <button key={label} className={active === label ? 'active' : ''} onClick={() => setActive(label)}><Icon size={17} /><span>{label}</span>{label === 'AI Agents' && <em>6</em>}</button>)}</nav>
       <div className="sidebar-bottom"><button><CircleHelp size={17} /> <span>Help center</span></button><button><Settings size={17} /> <span>Settings</span></button><div className="profile"><div className="avatar">AJ</div><div><b>Alex Johnson</b><small>Pro account</small></div><MoreHorizontal size={16} /></div></div>
