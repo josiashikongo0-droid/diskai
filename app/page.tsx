@@ -13,7 +13,6 @@ export default function WaitlistPage() {
           <span className="waitlist-logo"><Hexagon size={14} strokeWidth={2.8} /><i /></span>
           <div><strong>DISKAI</strong><small>Tour Operating System</small></div>
         </div>
-        <div className="waitlist-account">Already have an account <span>›</span></div>
       </header>
 
       <section className="waitlist-content">
