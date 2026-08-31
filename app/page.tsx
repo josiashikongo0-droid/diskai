@@ -1,10 +1,24 @@
 'use client'
 
 import { useState } from 'react'
+import type { FormEvent } from 'react'
 import { ArrowRight, Check, Hexagon } from 'lucide-react'
 
 export default function WaitlistPage() {
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  async function submitWaitlist(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    setLoading(true)
+    setError('')
+    const form = event.currentTarget
+    const email = new FormData(form).get('email')
+    const response = await fetch('/api/waitlist', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) })
+    if (response.ok) { setSubmitted(true); form.reset() } else { const data = await response.json().catch(() => ({})); setError(data.error ?? 'Please try again.') }
+    setLoading(false)
+  }
 
   return (
     <main className="waitlist-page">
@@ -25,10 +39,11 @@ export default function WaitlistPage() {
             {submitted ? (
               <div className="waitlist-success"><Check size={16} /><span>You&apos;re on the list. We&apos;ll be in touch.</span></div>
             ) : (
-              <form className="waitlist-form" onSubmit={(event) => { event.preventDefault(); setSubmitted(true) }}>
+              <form className="waitlist-form" onSubmit={submitWaitlist}>
                 <label className="sr-only" htmlFor="email">Your email address</label>
                 <input id="email" type="email" required placeholder="Your email address" />
-                <button type="submit">Join the waitlist <ArrowRight size={15} /></button>
+                <button type="submit" disabled={loading}>{loading ? 'Joining...' : <>Join the waitlist <ArrowRight size={15} /></>}</button>
+                {error && <p className="waitlist-error" role="alert">{error}</p>}
               </form>
             )}
             <p className="waitlist-note">No spam. Just a thoughtful invite when your seat is ready.</p>
