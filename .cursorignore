@@ -1,6 +1,0 @@
-.env*
-.next/
-node_modules/
-.vercel/
-coverage/
-*.log
