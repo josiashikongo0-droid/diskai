@@ -37,6 +37,20 @@ export const account = pgTable('account', {
   updatedAt: timestamp('updatedAt').notNull().defaultNow(),
 })
 
+export const tour = pgTable('tour', {
+  id: text('id').primaryKey(),
+  userId: text('userId').notNull(),
+  name: text('name').notNull(),
+  artist: text('artist').notNull(),
+  status: text('status').notNull().default('planning'),
+  startDate: timestamp('startDate'),
+  endDate: timestamp('endDate'),
+  cities: integer('cities').notNull().default(0),
+  revenue: integer('revenue').notNull().default(0),
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+})
+
 export const verification = pgTable('verification', {
   id: text('id').primaryKey(),
   identifier: text('identifier').notNull(),

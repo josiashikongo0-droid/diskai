@@ -7,6 +7,7 @@ import {
   Plus, Search, Send, Settings, Sparkles, Target, TrendingUp, Users, Wallet, X, Zap, Hexagon,
 } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
+import { createTour } from '@/app/actions/tours'
 
 const navItems = [
   ['Overview', LayoutDashboard], ['Tours', MapPin], ['Venues', Target], ['Bookings', FileText],
@@ -47,6 +48,22 @@ export default function Page() {
   const [assistant, setAssistant] = useState(false)
   const [query, setQuery] = useState('')
   const [generated, setGenerated] = useState(false)
+  const [assistantPrompt, setAssistantPrompt] = useState('')
+  const [assistantAnswer, setAssistantAnswer] = useState('')
+  const [assistantLoading, setAssistantLoading] = useState(false)
+  const askAssistant = async (prompt = assistantPrompt) => {
+    const cleanPrompt = prompt.trim()
+    if (!cleanPrompt || assistantLoading) return
+    setAssistantPrompt(cleanPrompt)
+    setAssistantLoading(true)
+    setAssistantAnswer('')
+    try {
+      const response = await fetch('/api/assistant', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: cleanPrompt }) })
+      const data = await response.json()
+      setAssistantAnswer(response.ok ? data.answer : data.error || 'Unable to answer right now.')
+    } catch { setAssistantAnswer('Unable to reach DISKAI right now.') }
+    finally { setAssistantLoading(false) }
+  }
   const filteredShows = useMemo(() => shows.filter((s) => `${s.city} ${s.venue}`.toLowerCase().includes(query.toLowerCase())), [query])
 
   return <div className="app-shell">
@@ -69,13 +86,18 @@ export default function Page() {
       </div>
     </main>
     <button className="ask-fab" onClick={() => setAssistant(true)}><Sparkles size={17} /> Ask DISKAI</button>
-    {assistant && <div className="assistant-overlay" onClick={() => setAssistant(false)}><aside className="assistant-panel" onClick={(e) => e.stopPropagation()}><div className="assistant-header"><div><div className="ai-icon"><Sparkles size={16} /></div><div><b>Ask DISKAI</b><span>Tour intelligence, on demand</span></div></div><button className="icon-button" onClick={() => setAssistant(false)}><X size={18} /></button></div><div className="assistant-body"><div className="assistant-welcome"><div className="ai-icon"><Sparkles size={19} /></div><h3>What can I help you with?</h3><p>Ask anything about your tours, venues, bookings, or finances.</p></div><div className="prompt-list">{['Plan a 10-city comedy tour in September.','Which venues should I contact next?','Find gaps in my schedule.','Show me my most profitable cities.'].map((p) => <button key={p} onClick={() => setQuery(p)}>{p}<ArrowUpRight size={14} /></button>)}</div></div><div className="assistant-input"><input placeholder="Ask about your tour..." /><button aria-label="Send"><Send size={16} /></button></div></aside></div>}
+    {assistant && <div className="assistant-overlay" onClick={() => setAssistant(false)}><aside className="assistant-panel" onClick={(e) => e.stopPropagation()}><div className="assistant-header"><div><div className="ai-icon"><Sparkles size={16} /></div><div><b>Ask DISKAI</b><span>Tour intelligence, on demand</span></div></div><button className="icon-button" onClick={() => setAssistant(false)}><X size={18} /></button></div><div className="assistant-body"><div className="assistant-welcome"><div className="ai-icon"><Sparkles size={19} /></div><h3>What can I help you with?</h3><p>Ask anything about your tours, venues, bookings, or finances.</p></div>{assistantAnswer && <div className="assistant-response"><strong>DISKAI</strong><p>{assistantAnswer}</p></div>}<div className="prompt-list">{['Plan a 10-city comedy tour in September.','Which venues should I contact next?','Find gaps in my schedule.','Show me my most profitable cities.'].map((p) => <button key={p} onClick={() => { setAssistantPrompt(p); askAssistant(p) }}>{p}<ArrowUpRight size={14} /></button>)}</div></div><form className="assistant-input" onSubmit={(e) => { e.preventDefault(); askAssistant() }}><input value={assistantPrompt} onChange={(e) => setAssistantPrompt(e.target.value)} placeholder="Ask about your tour..." aria-label="Ask DISKAI" /><button aria-label="Send" disabled={assistantLoading}><Send size={16} /></button></form></aside></div>}
   </div>
 }
 
 function WorkspaceView({ active, generated, setGenerated, query }: { active: string; generated: boolean; setGenerated: (v: boolean) => void; query: string }) {
+  const [tourName, setTourName] = useState('')
+  const [artist, setArtist] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
   const titles: Record<string, string> = { Tours: 'Your tours', Venues: 'Venue Intelligence', Bookings: 'Booking Pipeline', Calendar: 'Tour calendar', Finances: 'Tour Finances', Marketing: 'Marketing studio', 'AI Agents': 'DISKAI Agents', Analytics: 'Tour analytics' }
   if (active === 'AI Agents') return <><div className="welcome-row"><div><p className="eyebrow">INTELLIGENCE LAYER</p><h1>DISKAI Agents</h1><p className="subtitle">Specialized AI assistants working across your tour.</p></div></div><div className="agent-grid">{agents.map(([name, desc, tasks, action], i) => <div className="agent-card panel" key={name}><div className="agent-icon"><Bot size={19} /></div><div className="title-with-status"><h3>{name}</h3><Status>Active</Status></div><p>{desc}</p><div className="agent-footer"><span><Activity size={13} /> {tasks}</span><button>{action} <ArrowUpRight size={13} /></button></div></div>)}</div></>
   if (active === 'Finances' || active === 'Analytics') return <><div className="welcome-row"><div><p className="eyebrow">PERFORMANCE</p><h1>{titles[active]}</h1><p className="subtitle">Track the signals that move your business forward.</p></div><button className="outline-button"><Filter size={15} /> This tour <ChevronDown size={14} /></button></div><div className="stats-grid"><StatCard label="Revenue" value="$42,800" delta="12.4% vs. forecast" icon={DollarSign} /><StatCard label="Expenses" value="$24,380" delta="4.2% under budget" icon={Wallet} /><StatCard label="Profit margin" value="43.0%" delta="6.8% increase" icon={TrendingUp} /><StatCard label="Ticket velocity" value="78%" delta="On track to sell out" icon={Zap} /></div><section className="panel big-chart"><SectionTitle title="Revenue vs. expenses" action="Export report" /><div className="chart-legend"><span><i className="legend-cyan" /> Revenue</span><span><i className="legend-purple" /> Expenses</span></div><MiniChart /></section></>
-  return <><div className="welcome-row"><div><p className="eyebrow">WORKSPACE / {active.toUpperCase()}</p><h1>{titles[active]}</h1><p className="subtitle">Everything you need to keep your tour moving.</p></div><button className="outline-button" onClick={() => setGenerated(!generated)}><Plus size={16} /> {active === 'Tours' ? 'New tour' : 'Add to workspace'}</button></div><section className="panel empty-workspace"><div className="empty-icon"><Package size={22} /></div><h2>{generated ? 'Tour plan ready to review' : `Your ${active.toLowerCase()} workspace`}</h2><p>{generated ? 'DISKAI mapped 4 cities, 6 venues, and a route optimized for your budget.' : 'This view is ready for your live tour data. Explore the Overview to see your command center.'}</p><button className="primary-button" onClick={() => setGenerated(true)}>{generated ? 'Review tour plan' : 'Generate with DISKAI'} <ArrowUpRight size={15} /></button></section></>
+  if (active === 'Tours') return <><div className="welcome-row"><div><p className="eyebrow">WORKSPACE / TOURS</p><h1>Your tours</h1><p className="subtitle">Create and manage persistent tour plans in your workspace.</p></div></div><section className="panel empty-workspace"><div className="empty-icon"><MapPin size={22} /></div><h2>{saved ? 'Tour created' : 'Create a tour'}</h2><p>{saved ? 'Your tour is saved to the workspace database.' : 'Start with an artist and tour name. You can add venues and bookings next.'}</p><form onSubmit={async (event) => { event.preventDefault(); setSaving(true); setSaved(false); try { await createTour({ name: tourName, artist }); setSaved(true); setTourName(''); setArtist('') } finally { setSaving(false) } }}><input aria-label="Tour name" value={tourName} onChange={(event) => setTourName(event.target.value)} placeholder="Tour name" required /><input aria-label="Artist name" value={artist} onChange={(event) => setArtist(event.target.value)} placeholder="Artist or act" required /><button className="primary-button" disabled={saving}>{saving ? 'Saving...' : 'Save tour'} <ArrowUpRight size={15} /></button></form></section></>
+  return <><div className="welcome-row"><div><p className="eyebrow">WORKSPACE / {active.toUpperCase()}</p><h1>{titles[active]}</h1><p className="subtitle">Everything you need to keep your tour moving.</p></div><button className="outline-button" onClick={() => setGenerated(!generated)}><Plus size={16} /> Add to workspace</button></div><section className="panel empty-workspace"><div className="empty-icon"><Package size={22} /></div><h2>{generated ? 'Plan ready to review' : `Your ${active.toLowerCase()} workspace`}</h2><p>{generated ? 'DISKAI mapped a route optimized for your budget.' : 'This view is ready for your live tour data.'}</p><button className="primary-button" onClick={() => setGenerated(true)}>{generated ? 'Review plan' : 'Generate with DISKAI'} <ArrowUpRight size={15} /></button></section></>
 }
