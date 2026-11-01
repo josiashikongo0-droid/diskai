@@ -37,12 +37,12 @@ export default function WaitlistPage() {
         <a className="waitlist-brand" href="/" aria-label="DISKAI home">
           DISK<span>AI</span>
         </a>
-        <span className="waitlist-nav-note">Built for the music industry</span>
+        <span className="waitlist-nav-note">Built for the entertainment industry</span>
       </nav>
 
       <section className="waitlist-hero" aria-labelledby="waitlist-heading">
         <div className="waitlist-eyebrow"><span /> Private beta · 2026</div>
-        <h1 id="waitlist-heading">The operating system for your <em>music career.</em></h1>
+        <h1 id="waitlist-heading">The operating system for your <em>touring career.</em></h1>
         <p className="waitlist-copy">DISKAI brings your tours, releases, royalties, and opportunities into one clear command center. Join the private beta and be first in line.</p>
         <form className="waitlist-form" onSubmit={joinWaitlist}>
           <label className="sr-only" htmlFor="waitlist-email">Email address</label>
