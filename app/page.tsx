@@ -37,7 +37,7 @@ export default function WaitlistPage() {
         <a className="waitlist-brand" href="/" aria-label="DISKAI home">
           DISK<span>AI</span>
         </a>
-        <span className="waitlist-nav-note">Built for the touring industry</span>
+        <span className="waitlist-nav-note">Built for the entertainment industry</span>
       </nav>
 
       <section className="waitlist-hero" aria-labelledby="waitlist-heading">
