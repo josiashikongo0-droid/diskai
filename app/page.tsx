@@ -42,7 +42,7 @@ export default function WaitlistPage() {
 
       <section className="waitlist-hero" aria-labelledby="waitlist-heading">
         <div className="waitlist-eyebrow"><span /> Private beta · 2026</div>
-        <h1 id="waitlist-heading">The operating system for your <em>music career.</em></h1>
+        <h1 id="waitlist-heading">The operating system for your <em>touring career.</em></h1>
         <p className="waitlist-copy">DISKAI brings your tours, releases, royalties, and opportunities into one clear command center. Join the private beta and be first in line.</p>
         <form className="waitlist-form" onSubmit={joinWaitlist}>
           <label className="sr-only" htmlFor="waitlist-email">Email address</label>
