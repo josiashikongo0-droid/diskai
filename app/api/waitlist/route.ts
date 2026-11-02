@@ -26,9 +26,13 @@ async function sendConfirmationEmail(email: string) {
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null)
   const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : ''
+  const category = typeof body?.category === 'string' ? body.category.trim().slice(0, 80) || null : null
+  const country = typeof body?.country === 'string' ? body.country.trim().slice(0, 80) || null : null
+  const referredBy = typeof body?.referral === 'string' ? body.referral.trim().slice(0, 80) || null : null
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return NextResponse.json({ error: 'Enter a valid email address.' }, { status: 400 })
 
-  const { error } = await getSupabase().from('waitlist_entries').insert({ email })
+  const referralCode = `diskai-${crypto.randomUUID().slice(0, 8)}`
+  const { error } = await getSupabase().from('waitlist_signups').insert({ email, professional_category: category, country, referred_by: referredBy, referral_code: referralCode })
   if (error?.code === '23505') return NextResponse.json({ message: 'You are already on the list. We will be in touch.' })
   if (error) return NextResponse.json({ error: 'Unable to join waitlist.' }, { status: 500 })
 
@@ -38,5 +42,5 @@ export async function POST(request: Request) {
     console.error('[waitlist] Confirmation email failed:', emailError)
   }
 
-  return NextResponse.json({ message: 'You are in. Check your inbox for a confirmation email.' }, { status: 201 })
+  return NextResponse.json({ message: 'You are in. Check your inbox for a confirmation email.', referralCode }, { status: 201 })
 }
