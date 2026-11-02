@@ -3,9 +3,22 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'DISKAI — Tour Operating System',
-  description: 'The AI-powered operating system for touring artists and live entertainment businesses.',
+  title: 'DISKAI – The Operating System for the Entertainment Industry',
+  description: 'DISKAI brings touring, career management, events, opportunities and revenue insights into one intelligent platform for entertainment professionals.',
   generator: 'v0.app',
+  metadataBase: new URL('https://diskai.vercel.app'),
+  openGraph: {
+    title: 'DISKAI – The Operating System for the Entertainment Industry',
+    description: 'Join the DISKAI private beta and help shape the future of entertainment.',
+    url: 'https://diskai.vercel.app',
+    siteName: 'DISKAI',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'DISKAI – The Operating System for the Entertainment Industry',
+    description: 'Join the DISKAI private beta and help shape the future of entertainment.',
+  },
   icons: {
     icon: [
       {
